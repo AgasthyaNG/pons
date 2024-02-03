@@ -1,26 +1,30 @@
-
 from __future__ import division, print_function
-from abc import ABC, abstractclassmethod
+
+import abc
+from abc import ABC, abstractmethod
 import logging
 import kafka
+
 
 class Kafkaio(ABC):
     """
         A description of the entire function, its parameters, and its return types.
     """
-    @abstractclassmethod
+
+    @abstractmethod
     def consumer_config(cls):
         """
         A description of the entire function, its parameters, and its return types.
         """
         pass
 
-    @abstractclassmethod
+    @abstractmethod
     def topic_name(cls):
         """
         A description of the entire function, its parameters, and its return types.
         """
         pass
+
 
 class KafkaReadData(Kafkaio):
     """
@@ -33,11 +37,12 @@ class KafkaReadData(Kafkaio):
             Returns:
                 None
     """
+
     def __init__(self, consumer_config, topic_name) -> None:
         self.consumer_config = consumer_config
         self.topic_name = topic_name
 
-    def consumer_config(self) ->dict:
+    def consumer_config(self) -> dict:
         """
         Return the consumer configuration as a dictionary if it is already a dictionary.
         """
@@ -58,6 +63,7 @@ class KafkaReadData(Kafkaio):
         consumer = kafka.KafkaConsumer(topic_name, **kafka_config)
         return consumer
 
+
 def kafka_read_data(consumer_config, topic_name):
     """
     This function initializes a KafkaReadData object with the given consumer_config and topic_name.
@@ -65,9 +71,10 @@ def kafka_read_data(consumer_config, topic_name):
     consumes data from Kafka.
     If any error occurs, it raises an Exception with the message "Error in kafka_read_data".
     """
-    kafka = KafkaReadData(consumer_config, topic_name)
+    consumerism = KafkaReadData(consumer_config, topic_name)
     try:
-        messages= kafka.consume_data()
+        messages = consumerism.consume_data()
+        assert messages is not None
         for message in messages:
             logging.info(message)
     except:
