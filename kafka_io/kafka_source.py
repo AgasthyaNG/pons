@@ -1,6 +1,13 @@
+"""_summary_
+
+    Raises:
+        Exception: that the consumer_config is not accessable or the topic_name is not accessable
+
+    Returns:
+        _type_: kafka messages
+"""
 from __future__ import division, print_function
 
-import abc
 from abc import ABC, abstractmethod
 import logging
 import kafka
@@ -12,14 +19,14 @@ class Kafkaio(ABC):
     """
 
     @abstractmethod
-    def consumer_config(cls):
+    def consumer_config(self):
         """
         A description of the entire function, its parameters, and its return types.
         """
         pass
 
     @abstractmethod
-    def topic_name(cls):
+    def topic_name(self):
         """
         A description of the entire function, its parameters, and its return types.
         """
@@ -77,5 +84,5 @@ def kafka_read_data(consumer_config, topic_name):
         assert messages is not None
         for message in messages:
             logging.info(message)
-    except:
-        raise Exception("Error in kafka_read_data")
+    except Exception as exe:
+        raise Exception(exe) from exe
