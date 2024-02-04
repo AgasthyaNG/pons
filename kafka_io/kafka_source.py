@@ -71,7 +71,7 @@ class KafkaReadData(Kafkaio):
         return consumer
 
 
-def kafka_read_data(consumer_config, topic_name):
+def kafka_read_data(consumer_config, topic_name)-> kafka.KafkaConsumer:
     """
     This function initializes a KafkaReadData object with the given consumer_config and topic_name.
     It then asserts that the consumer_config is of type dict and the topic_name is of type str, and
@@ -81,8 +81,6 @@ def kafka_read_data(consumer_config, topic_name):
     consumerism = KafkaReadData(consumer_config, topic_name)
     try:
         messages = consumerism.consume_data()
-        assert messages is not None
-        for message in messages:
-            logging.info(message)
+        return messages
     except Exception as exe:
         raise Exception(exe) from exe
