@@ -7,5 +7,5 @@ from importlib.machinery import SourceFileLoader
 def transform(msg,module_name, file_path) -> str:
     # Choose a unique module name
     user_module = SourceFileLoader(module_name, file_path).load_module()
-    result = getattr(user_module, "decodebase64")(msg)
+    result = getattr(user_module, module_name)(msg)
     return result
