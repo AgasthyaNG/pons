@@ -45,7 +45,7 @@ def run_application() -> None:
     value = kafka_source.kafka_read_data({"bootstrap_servers": "localhost:9092"}, "kafka-topic")
     for msg in value:
         logging.info(f'Received message: {msg.value.decode("utf-8")}')
-        print(transform(msg))
+        print(transform(msg.value,"decodebase64","./transformation/custom/decodebase64.py"))
     
 if __name__ == '__main__':
     run_application()

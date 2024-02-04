@@ -2,11 +2,10 @@
 # The configurations will be provided by a HCl/JSON file in the following format defined
 # This code will perform transformations based on the 
 # functions set up in the files here 
-import importlib
-
+from importlib.machinery import SourceFileLoader
 
 def transform(msg,module_name, file_path) -> str:
     # Choose a unique module name
-    user_module = importlib.import_module(module_name, file_path)
+    user_module = SourceFileLoader(module_name, file_path).load_module()
     result = getattr(user_module, "decodebase64")(msg)
     return result
