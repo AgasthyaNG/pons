@@ -1,1 +1,0 @@
-# Writes the messages to the command line
