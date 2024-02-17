@@ -8,7 +8,8 @@ from google.auth import jwt
 
 audience = "https://pubsub.googleapis.com/google.pubsub.v1.Subscriber"
 
-# Source pubsub topic 
+
+# Source pubsub topic
 class PubSubReadData:
     """
     Initialize the object with the given subscription name and project id.
@@ -20,11 +21,15 @@ class PubSubReadData:
     Returns:
         None
     """
-    def __init__(self, subscription_name, project_id, topic_name, service_account_info) -> None:
+
+    def __init__(
+        self, subscription_name, project_id, topic_name, service_account_info
+    ) -> None:
         self.subscription_name = subscription_name
         self.project_id = project_id
         self.topic_name = topic_name
         self.service_account_info = service_account_info
+
     def read_data(self):
         """
         A method to read data from pubsub and return a SubscriberClient object.
@@ -32,14 +37,18 @@ class PubSubReadData:
         credentials = jwt.Credentials.from_service_account_info(
             self.service_account_info, audience=audience
         )
-        subscriber = pubsub_v1.SubscriberClient(credentials = credentials)
-        subscription_path = subscriber.subscription_path(self.project_id, self.subscription_name)
+        subscriber = pubsub_v1.SubscriberClient(credentials=credentials)
+        subscription_path = subscriber.subscription_path(
+            self.project_id, self.subscription_name
+        )
         return subscriber, subscription_path
+
 
 def callback(message):
     print(message.data)
     message.ack()
-    
+
+
 def pubsub_read_data(subscription_name, project_id, topic_name, service_account_info):
     """
     This function initializes a PubSubReadData object with the given subscription_name and project_id.
@@ -47,14 +56,15 @@ def pubsub_read_data(subscription_name, project_id, topic_name, service_account_
     reads data from pubsub.
     If any error occurs, it raises an Exception with the message "Error in pubsub_read_data".
     """
-    subscribe = PubSubReadData(subscription_name, project_id, topic_name, service_account_info)
+    subscribe = PubSubReadData(
+        subscription_name, project_id, topic_name, service_account_info
+    )
     subscribe, path = subscribe.read_data()
     subscriber = subscribe.subscribe(path, callback)
     print(f"Listening for messages on {path}...")
-    
-    try:    
+
+    try:
         while True:
             pass
     except Exception as exe:
         raise Exception(exe) from exe
-
