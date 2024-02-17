@@ -34,11 +34,11 @@ class PubSubReadData:
         )
         subscriber = pubsub_v1.SubscriberClient(credentials = credentials)
         subscription_path = subscriber.subscription_path(self.project_id, self.subscription_name)
-        subscriber.create_subscription(
-            name = subscription_path,
-            topic = self.topic_name
-        )
-        return subscriber
+        # subscriber.create_subscription(
+        #     name = subscription_path,
+        #     topic = self.topic_name
+        # )
+        return subscriber, subscription_path
 
 def callback(message):
     print(message.data)
@@ -52,9 +52,9 @@ def pubsub_read_data(subscription_name, project_id, topic_name, service_account_
     If any error occurs, it raises an Exception with the message "Error in pubsub_read_data".
     """
     
-    subscribe = PubSubReadData(subscription_name, project_id, topic_name, service_account_info)
-    subscriber = subscribe.subscribe(subscription_name, callback)
-    print(f"Listening for messages on {subscription_name}...")
+    subscribe, path = PubSubReadData.read_data(subscription_name, project_id, topic_name, service_account_info)
+    subscriber = subscribe.subscribe(path, callback)
+    print(f"Listening for messages on {path}...")
     
     try:    
         while True:
