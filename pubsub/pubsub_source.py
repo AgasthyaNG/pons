@@ -34,25 +34,21 @@ class PubSubReadData:
         )
         subscriber = pubsub_v1.SubscriberClient(credentials = credentials)
         subscription_path = subscriber.subscription_path(self.project_id, self.subscription_name)
-        # subscriber.create_subscription(
-        #     name = subscription_path,
-        #     topic = self.topic_name
-        # )
         return subscriber, subscription_path
 
 def callback(message):
     print(message.data)
     message.ack()
     
-def pubsub_read_data(subscription_name, project_id, topic_name, service_account_info) -> pubsub_v1.SubscriberClient:
+def pubsub_read_data(subscription_name, project_id, topic_name, service_account_info):
     """
     This function initializes a PubSubReadData object with the given subscription_name and project_id.
     It then asserts that the subscription_name is of type str and the project_id is of type str, and
     reads data from pubsub.
     If any error occurs, it raises an Exception with the message "Error in pubsub_read_data".
     """
-    
-    subscribe, path = PubSubReadData.read_data(subscription_name, project_id, topic_name, service_account_info)
+    subscribe = PubSubReadData(subscription_name, project_id, topic_name, service_account_info)
+    subscribe, path = subscribe.read_data()
     subscriber = subscribe.subscribe(path, callback)
     print(f"Listening for messages on {path}...")
     
