@@ -30,7 +30,7 @@ class PubSubReadData:
         self.topic_name = topic_name
         self.service_account_info = service_account_info
 
-    @classmethod
+
     def read_data(self):
         """
         A method to read data from pubsub and return a SubscriberClient object.
