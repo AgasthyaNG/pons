@@ -33,8 +33,9 @@ class PubSubReadData:
             self.service_account_info, audience=audience
         )
         subscriber = pubsub_v1.SubscriberClient(credentials = credentials)
+        subscription_path = subscriber.subscription_path(self.project_id, self.subscription_name)
         subscriber.create_subscription(
-            name = self.subscription_name,
+            name = subscription_path,
             topic = self.topic_name
         )
         return subscriber
