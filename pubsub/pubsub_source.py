@@ -26,10 +26,11 @@ class PubSubReadData:
         self, subscription_name, project_id, topic_name, service_account_info
     ) -> None:
         self.subscription_name = subscription_name
-        self.project_id = project_id
+        self.project_id = project_id``
         self.topic_name = topic_name
         self.service_account_info = service_account_info
 
+    @classmethod
     def read_data(self):
         """
         A method to read data from pubsub and return a SubscriberClient object.
