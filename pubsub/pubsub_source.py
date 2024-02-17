@@ -30,7 +30,7 @@ class PubSubReadData:
         A method to read data from pubsub and return a SubscriberClient object.
         """
         credentials = jwt.Credentials.from_service_account_info(
-            service_account_info, audience=audience
+            self.service_account_info, audience=audience
         )
         subscriber = pubsub_v1.SubscriberClient(credentials = credentials)
         subscriber.create_subscription(
