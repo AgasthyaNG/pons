@@ -10,15 +10,27 @@ from kafka_io import kafka_source
 from transformation.transformation import transform
 from stdio1 import stdoutput
 from pubsub.pubsub_destination import WriteToPubsub
+from argparse import ArgumentParser
 
+# Set the logging level
 logging.basicConfig(level=logging.INFO)
 
-
+parser = ArgumentParser()
+parser.add_argument("--transformations", help="perform transformations", default=False)
+parser.add_argument("--reqsource", help="source of the data queue", default=1)
+parser.add_argument("--destinationq", help="destination of the data queue", default=1)
+parser.add_argument("--project_id", help="project id", required=False)
+parser.add_argument("--topic_name", help="topic name", required=False)
+parser.add_argument("--service_account_info", help="service account info", required=False)
+parser.add_argument("--topic", help="kafka topic", required=False)
+parser.add_argument("--servers", help="kafka servers",required=False)
+parser.add_argument("--transform_module", help="transformation module", required=False)
+args = parser.parse_args() 
+# Define the source and destination of the data
 class Source(enum):
     """
     Source of the data
     """
-
     KAFKA = 1
     PUBSUB = 2
 
@@ -27,23 +39,27 @@ class Destination(enum):
     """
     Destination of the message
     """
-
     STDIO = 1
     PUBSUB = 2
 
 
 # if set to true the transformation will be performed
-TRANSFORMATIONS = False
+TRANSFORMATIONS = args.transformations
 # The source of the data queue
-REQSOURCE = 1
+REQSOURCE = args.reqsource
 # the destination of the data queue
-DESTINATIONQ = 0
+DESTINATIONQ = args.destinationq
 
-PROJECT_ID = "robotic-augury-333723"
-TOPIC_NAME = "test"
-SERVICE_ACCOUNT_INFO = "service-account-info"
+# Pubsub configuration
+PROJECT_ID = args.project_id
+TOPIC_NAME = args.topic_name
+SERVICE_ACCOUNT_INFO = args.service_account_info
 
+# kafka configuration
+TOPIC = args.topic
+SERVERS = args.servers
 
+TRANSFORM_MODULE = args.transform_module
 def run_application() -> None:
     """
     Run the application and log the start. Read data from a Kafka topic.
@@ -58,12 +74,12 @@ def run_application() -> None:
     logging.info("Starting the application")
     if Source.KAFKA.value == REQSOURCE:
         value = kafka_source.kafka_read_data(
-            {"bootstrap_servers": "localhost:9092"}, "kafka-topic"
+            {"bootstrap_servers": SERVERS}, TOPIC
         )
         for msg in value:
             if TRANSFORMATIONS:
                 results = transform(
-                    msg.value, "decodebase64", "./transformation/custom/decodebase64.py"
+                    msg.value, TRANSFORM_MODULE, f"./transformation/custom/{TRANSFORM_MODULE}.py"
                 )
             else:
                 results = msg.value
