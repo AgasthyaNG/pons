@@ -27,6 +27,6 @@ class WriteToPubsub:
         topic_path = self._topic_path()
         try:
             publisher.publish(topic_path, self.message)
-            logging.info(f"Message published to {self.topic_name}")
+            logging.info("Message published to %s", self.topic_name)
         except Exception as exe:
-            raise Exception(exe) from exe
+            raise ValueError(str(exe)) from exe

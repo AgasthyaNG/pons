@@ -71,16 +71,16 @@ class KafkaReadData(Kafkaio):
         return consumer
 
 
-def kafka_read_data(consumer_config, topic_name)-> kafka.KafkaConsumer:
+def kafka_read_data(consumer_config, topic_name) -> kafka.KafkaConsumer:
     """
     This function initializes a KafkaReadData object with the given consumer_config and topic_name.
     It then asserts that the consumer_config is of type dict and the topic_name is of type str, and
     consumes data from Kafka.
-    If any error occurs, it raises an Exception with the message "Error in kafka_read_data".
+    If any error occurs, it raises a ValueError with the original exception as its cause.
     """
     consumerism = KafkaReadData(consumer_config, topic_name)
     try:
         messages = consumerism.consume_data()
         return messages
     except Exception as exe:
-        raise Exception(exe) from exe
+        raise ValueError("Error in kafka_read_data") from exe
