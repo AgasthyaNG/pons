@@ -11,9 +11,10 @@ from transformation.transformation import transform
 from stdio1 import stdoutput
 from pubsub.pubsub_destination import WriteToPubsub
 from argparse import ArgumentParser
+from stdio1 import stdinput
 
 # Set the logging level
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.DEBUG, format="%(asctime)s:%(levelname)s:%(message)s")
 
 parser = ArgumentParser()
 parser.add_argument("--transformations", help="perform transformations", default=False)
@@ -33,7 +34,7 @@ class Source(enum):
     """
     KAFKA = 1
     PUBSUB = 2
-
+    STDIO = 3
 
 class Destination(enum):
     """
@@ -46,9 +47,9 @@ class Destination(enum):
 # if set to true the transformation will be performed
 TRANSFORMATIONS = args.transformations
 # The source of the data queue
-REQSOURCE = args.reqsource
+REQSOURCE = int(args.reqsource)
 # the destination of the data queue
-DESTINATIONQ = args.destinationq
+DESTINATIONQ = int(args.destinationq)
 
 # Pubsub configuration
 PROJECT_ID = args.project_id
@@ -91,7 +92,26 @@ def run_application() -> None:
                 WriteToPubsub(
                     project_id=PROJECT_ID, topic_name=TOPIC_NAME, message=results
                 ).publish()
-
+    logging.info("Starting the application if it is not kafka source")
+    if Source.STDIO.value == REQSOURCE:
+        logging.info("Starting the std input listner")
+        value = stdinput.stand_io()
+        logging.info("The listner has stopped")
+        logging.info(value )
+        for msg in value:
+            if TRANSFORMATIONS:
+                results = transform(
+                    msg, TRANSFORM_MODULE, f"./transformation/custom/{TRANSFORM_MODULE}.py"
+                )
+            else:
+                results = msg
+            if Destination.STDIO.value == DESTINATIONQ:
+                stdoutput.stdio(results)
+            else:
+                logging.info("Sending message to pubsub")
+                WriteToPubsub(
+                    project_id=PROJECT_ID, topic_name=TOPIC_NAME, message=results
+                ).publish()
 
 if __name__ == "__main__":
     run_application()
