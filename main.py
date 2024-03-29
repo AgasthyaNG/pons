@@ -45,7 +45,7 @@ class Destination(enum):
 
 
 # if set to true the transformation will be performed
-TRANSFORMATIONS = args.transformations
+TRANSFORMATIONS = bool(args.transformations)
 # The source of the data queue
 REQSOURCE = int(args.reqsource)
 # the destination of the data queue
