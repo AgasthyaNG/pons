@@ -1,5 +1,6 @@
 import base64
 
+
 def tobytes(msg) -> str:
     """_summary_
 
@@ -7,6 +8,6 @@ def tobytes(msg) -> str:
         msg (_type_): base 64 encoded string to be decoded
 
     Returns:
-        str: decode data 
+        str: decode data
     """
-    return(bytes(msg, 'utf-8'))
+    return bytes(msg, "utf-8")
