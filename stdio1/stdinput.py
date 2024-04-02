@@ -1,5 +1,6 @@
 import logging
 
+
 def stand_io():
     value = []
     user_val = ""

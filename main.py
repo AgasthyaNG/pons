@@ -22,24 +22,29 @@ parser.add_argument("--reqsource", help="source of the data queue", default=1)
 parser.add_argument("--destinationq", help="destination of the data queue", default=1)
 parser.add_argument("--project_id", help="project id", required=False)
 parser.add_argument("--topic_name", help="topic name", required=False)
-parser.add_argument("--service_account_info", help="service account info", required=False)
+parser.add_argument(
+    "--service_account_info", help="service account info", required=False
+)
 parser.add_argument("--topic", help="kafka topic", required=False)
-parser.add_argument("--servers", help="kafka servers",required=False)
+parser.add_argument("--servers", help="kafka servers", required=False)
 parser.add_argument("--transform_module", help="transformation module", required=False)
-args = parser.parse_args() 
+args = parser.parse_args()
 # Define the source and destination of the data
 class Source(enum):
     """
     Source of the data
     """
+
     KAFKA = 1
     PUBSUB = 2
     STDIO = 3
+
 
 class Destination(enum):
     """
     Destination of the message
     """
+
     STDIO = 1
     PUBSUB = 2
 
@@ -61,6 +66,8 @@ TOPIC = args.topic
 SERVERS = args.servers
 
 TRANSFORM_MODULE = args.transform_module
+
+
 def run_application() -> None:
     """
     Run the application and log the start. Read data from a Kafka topic.
@@ -74,13 +81,13 @@ def run_application() -> None:
 
     logging.info("Starting the application")
     if Source.KAFKA.value == REQSOURCE:
-        value = kafka_source.kafka_read_data(
-            {"bootstrap_servers": SERVERS}, TOPIC
-        )
+        value = kafka_source.kafka_read_data({"bootstrap_servers": SERVERS}, TOPIC)
         for msg in value:
             if TRANSFORMATIONS:
                 results = transform(
-                    msg.value, TRANSFORM_MODULE, f"./transformation/custom/{TRANSFORM_MODULE}.py"
+                    msg.value,
+                    TRANSFORM_MODULE,
+                    f"./transformation/custom/{TRANSFORM_MODULE}.py",
                 )
             else:
                 results = msg.value
@@ -97,11 +104,13 @@ def run_application() -> None:
         logging.info("Starting the std input listner")
         value = stdinput.stand_io()
         logging.info("The listner has stopped")
-        logging.info(value )
+        logging.info(value)
         for msg in value:
             if TRANSFORMATIONS:
                 results = transform(
-                    msg, TRANSFORM_MODULE, f"./transformation/custom/{TRANSFORM_MODULE}.py"
+                    msg,
+                    TRANSFORM_MODULE,
+                    f"./transformation/custom/{TRANSFORM_MODULE}.py",
                 )
             else:
                 results = msg
@@ -112,6 +121,7 @@ def run_application() -> None:
                 WriteToPubsub(
                     project_id=PROJECT_ID, topic_name=TOPIC_NAME, message=results
                 ).publish()
+
 
 if __name__ == "__main__":
     run_application()

@@ -2,6 +2,7 @@
 """
 import base64
 
+
 def decodebase64(msg) -> str:
     """_summary_
 
@@ -9,6 +10,6 @@ def decodebase64(msg) -> str:
         msg (_type_): base 64 encoded string to be decoded
 
     Returns:
-        str: decode data 
+        str: decode data
     """
-    return(base64.b64decode(msg).decode("utf-8"))
+    return base64.b64decode(msg).decode("utf-8")

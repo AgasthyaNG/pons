@@ -15,7 +15,7 @@ import kafka
 
 class Kafkaio(ABC):
     """
-        A description of the entire function, its parameters, and its return types.
+    A description of the entire function, its parameters, and its return types.
     """
 
     @abstractmethod
@@ -35,14 +35,14 @@ class Kafkaio(ABC):
 
 class KafkaReadData(Kafkaio):
     """
-            Initialize the object with the given consumer configuration and topic name.
+    Initialize the object with the given consumer configuration and topic name.
 
-            Args:
-                consumer_config: The consumer configuration for the object.
-                topic_name: The name of the topic for the object.
+    Args:
+        consumer_config: The consumer configuration for the object.
+        topic_name: The name of the topic for the object.
 
-            Returns:
-                None
+    Returns:
+        None
     """
 
     def __init__(self, consumer_config, topic_name) -> None:
